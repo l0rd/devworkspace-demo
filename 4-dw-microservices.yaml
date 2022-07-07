@@ -5,12 +5,7 @@ metadata:
   namespace: dw-demo
 spec:
   started: true
-  # Commenting out, waiting for https://github.com/devfile/devworkspace-operator/pull/868
-  # pods:
-  #   metadata:
-  #     annotations:
-  #       io.openshift.userns: "true"
-  #       io.kubernetes.cri-o.userns-mode: "auto:size=65536;map-to-root=true"  # <-- user namespace
+  routingClass: che
   template:
     attributes:
       controller.devfile.io/storage-type: ephemeral
@@ -32,6 +27,8 @@ spec:
             - name: ttyd
               path: /tmp/
           endpoints:
+            - name: frontend
+              targetPort: 8079
             - name: ttyd
               attributes:
                 type: main
@@ -63,5 +60,52 @@ spec:
           che-ttyd.eclipse.org/contribute-cpuLimit: true
           che-ttyd.eclipse.org/contribute-cpuRequest: true
           che-ttyd.eclipse.org/contributed-container: frontend
-
+      - name: catalogue
+        container:
+          image: weaveworksdemos/catalogue:0.3.5
+          cpuLimit: 200m
+          memoryLimit: 200Mi
+          cpuRequest: 100m
+          memoryRequest: 100Mi
+          command:
+            - sh
+          args:
+            - '-c'
+            - 'sleep 30 && /app -port 8080 -DSN "catalogue_user:default_password@tcp(localhost:3306)/socksdb"'
+            # - 'sleep 30 && /app -port 8080 -DSN "catalogue_user:default_password@tcp(catalogue-db:3306)/socksdb"'
+          endpoints:
+            - name: catalogue
+              targetPort: 8080
+              exposure: internal
+      - name: catalogue-db
+        container:
+          image: weaveworksdemos/catalogue-db:0.3.0
+          cpuLimit: 200m
+          memoryLimit: 300Mi
+          cpuRequest: 100m
+          memoryRequest: 100Mi
+          env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: fake_password
+          - name: MYSQL_DATABASE
+            value: socksdb
+          volumeMounts:
+            - name: catalogue-volume
+              path: /var/lib/mysql
+          endpoints:
+            - name: catalogue-db
+              targetPort: 3360
+              exposure: internal
+      - name: catalogue-volume
+        volume:
+          ephemeral: true
+    commands:
+      - id: install
+        exec:
+          component: frontend
+          commandLine: npm install
+      - id: container-build
+        exec:
+          component: frontend
+          commandLine: buildah 
 

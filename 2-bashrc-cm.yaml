@@ -2,14 +2,16 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: dotfiles-config
+  namespace: dw-demo
   annotations:
     controller.devfile.io/mount-as: subpath
-    controller.devfile.io/mount-path: /home/user
+    controller.devfile.io/mount-path: /home/user/.bashrc.d
   labels:
     controller.devfile.io/mount-to-devworkspace: "true"
     controller.devfile.io/watch-configmap: "true"
 data:
-  .bashrc: |
+  ps1.sh: |
+    #! /bin/bash
     function color_my_prompt {
         local __user_and_host="\[\033[01;32m\]\u@\h"
         local __cur_location="\[\033[01;34m\]\W"

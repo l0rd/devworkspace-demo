@@ -2,6 +2,7 @@ apiVersion: workspace.devfile.io/v1alpha2
 kind: DevWorkspaceTemplate
 metadata:
   name: vs-code
+  namespace: dw-demo
 spec:
   commands:
     - id: init-container-command

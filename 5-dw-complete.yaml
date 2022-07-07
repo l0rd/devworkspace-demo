@@ -1,0 +1,211 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalogue
+spec:
+  selector:
+    controller.devfile.io/devworkspace_name: microservices-demo
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalogue-db
+spec:
+  selector:
+    controller.devfile.io/devworkspace_name: microservices-demo
+  ports:
+    - port: 3360
+      targetPort: 3360
+---
+kind: DevWorkspace
+apiVersion: workspace.devfile.io/v1alpha2
+metadata:
+  name: microservices-demo
+spec:
+  started: true
+  routingClass: che
+  template:
+    attributes:
+      controller.devfile.io/storage-type: ephemeral
+    projects:
+      - name: microservices-demo-frontend
+        git:
+          remotes:
+            origin: "https://github.com/l0rd/microservices-demo-frontend"
+    components:
+      - name: editor
+        plugin:
+          kubernetes:
+            name: vs-code
+      - name: frontend
+        container:
+          image: quay.io/mloriedo/universal-developer-image:ubi8-dw-demo
+          args: ["/checode/entrypoint-volume.sh"]
+          env: [{name: CODE_HOST, value: "0.0.0.0"}]
+          volumeMounts:
+            - name: checode
+              path: /checode
+          memoryLimit: 2G
+          memoryRequest: 256Mi
+          cpuLimit: 500m
+          cpuRequest: 30m
+          endpoints:
+            - name: frontend
+              targetPort: 8079
+            - name: nodejs
+              targetPort: 3000
+            - name: che-code
+              attributes:
+                type: main
+                discoverable: false
+                urlRewriteSupported: true
+                contributed-by: che-code.eclipse.org
+              targetPort: 3100
+              exposure: public
+              path: '?tkn=eclipse-che'
+              secure: false
+              protocol: https
+            - name: code-redirect-1
+              attributes:
+                discoverable: false
+                urlRewriteSupported: false
+                contributed-by: che-code.eclipse.org
+              targetPort: 13131
+              exposure: public
+              protocol: http
+        attributes:
+          che-code.eclipse.org/contribute-entry-point: true
+          che-code.eclipse.org/contribute-volume-mount/checode: /checode
+          che-code.eclipse.org/contribute-endpoint/che-code: 3100
+          che-code.eclipse.org/contribute-endpoint/code-redirect-1: 13131
+          che-code.eclipse.org/contribute-endpoint/code-redirect-2: 13132
+          che-code.eclipse.org/contribute-endpoint/code-redirect-3: 13133
+          che-code.eclipse.org/contribute-memoryLimit: true
+          che-code.eclipse.org/original-memoryLimit: 1G
+          che-code.eclipse.org/contribute-memoryRequest: true
+          che-code.eclipse.org/contribute-cpuLimit: true
+          che-code.eclipse.org/contribute-cpuRequest: true
+          che-code.eclipse.org/contributed-container: frontend
+      - name: catalogue
+        container:
+          image: weaveworksdemos/catalogue:0.3.5
+          cpuLimit: 200m
+          memoryLimit: 200Mi
+          cpuRequest: 100m
+          memoryRequest: 100Mi
+          command:
+            - sh
+          args:
+            - '-c'
+            - 'sleep 30 && /app -port 8080 -DSN "catalogue_user:default_password@tcp(localhost:3306)/socksdb"'
+            # - 'sleep 30 && /app -port 8080 -DSN "catalogue_user:default_password@tcp(catalogue-db:3306)/socksdb"'
+          # endpoints:
+          #   - name: catalogue
+          #     targetPort: 8080
+          #     exposure: internal
+      - name: catalogue-db
+        container:
+          image: weaveworksdemos/catalogue-db:0.3.0
+          cpuLimit: 200m
+          memoryLimit: 300Mi
+          cpuRequest: 100m
+          memoryRequest: 100Mi
+          env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: fake_password
+          - name: MYSQL_DATABASE
+            value: socksdb
+          volumeMounts:
+            - name: catalogue-volume
+              path: /var/lib/mysql
+          # endpoints:
+          #   - name: catalogue-db
+          #     targetPort: 3360
+          #     exposure: internal
+      - name: catalogue-volume
+        volume:
+          ephemeral: true
+      # - name: carts
+      #   container:
+      #     image: weaveworksdemos/carts:0.4.8
+      #     env:
+      #       - name: JAVA_OPTS
+      #         value: -Xms64m -Xmx128m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom -Dspring.zipkin.enabled=false
+      #     cpuLimit: 300m
+      #     memoryLimit: 500Mi
+      #     cpuRequest: 100m
+      #     memoryRequest: 200Mi
+      # - name: carts-db
+      #   container:
+      #     image: mongo
+      #     env:
+      #       - name: reschedule
+      #         value: on-node-failure
+      #     volumeMounts:
+      #       - name: mongo-volume
+      #         path: /data/db
+      # - name: mongo-volume
+      #   volume:
+      #     ephemeral: true
+      # - name: orders
+      #   container:
+      #     image: weaveworksdemos/orders
+      #     env:
+      #       - name: reschedule
+      #         value: on-node-failure
+      # - name: orders-db
+      #   container:
+      #     image: mongo
+      #     env:
+      #       - name: reschedule
+      #         value: on-node-failure
+      # - name: shipping
+      #   container:
+      #     image: weaveworksdemos/shipping
+      #     env:
+      #       - name: reschedule
+      #         value: on-node-failure
+      # - name: queue-master
+      #   container:
+      #     image: weaveworksdemos/queue-master
+      #   #    volumes:
+      #   #      - /var/run/docker.sock:/var/run/docker.sock
+      #     env:
+      #       - name: reschedule
+      #         value: on-node-failure
+      # - name: rabbitmq
+      #   container:
+      #     image: rabbitmq:3
+      #     env:
+      #       - name: reschedule
+      #         value: on-node-failure
+      # - name: payment
+      #   container:
+      #     image: weaveworksdemos/payment
+      #     env:
+      #       - name: reschedule
+      #         value: on-node-failure
+      #     command:
+      #       - '/app'
+      #     args:
+      #       - '-port=80'
+      #       - '-decline=999'
+      # - name: user
+      #   container:
+      #     image: weaveworksdemos/user
+      #     env:
+      #       - name: reschedule
+      #         value: on-node-failure
+      #       - name: MONGO_HOST
+      #         value: user-db:27017
+      # - name: user-db
+      #   container:
+      #     image: weaveworksdemos/user-db
+      #     env:
+      #       - name: reschedule
+      #         value: on-node-failure
+  
