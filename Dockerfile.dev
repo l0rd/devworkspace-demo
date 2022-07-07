@@ -1,0 +1,6 @@
+FROM quay.io/devfile/universal-developer-image:ubi8-latest
+
+# make it possible to mount the .kube/config
+RUN mkdir /home/user/.kube && chmod -R g=u /home/user/.kube
+
+RUN echo '[ -d ~/.bashrc.d ] && for i in ~/.bashrc.d/*.sh; do [ -r $i ] && . $i; done' >> /home/user/.bashrc

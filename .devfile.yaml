@@ -1,0 +1,23 @@
+schemaVersion: 2.1.0
+metadata:
+  name: dw-demo 
+attributes:
+  controller.devfile.io/storage-type: ephemeral
+components:
+  - name: devtools
+    container:
+      image: "quay.io/devfile/universal-developer-image:ubi8-latest"
+      memoryLimit: 2Gi
+      memoryRequest: 256Mi
+
+commands:
+- id: 0-prep01-deploy-editors
+  exec:
+    commandLine: 'kubectl apply -f ./ttyd.yml && kubectl apply -f ./vs-code.yml'
+    component: devtools
+- id: 
+  exec:
+    commandLine: '.repositories-update-contributing.sh IN_DOCKER'
+    component: devtools
+
+
