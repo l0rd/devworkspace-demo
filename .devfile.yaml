@@ -15,9 +15,5 @@ commands:
   exec:
     commandLine: 'kubectl apply -f ./ttyd.yml && kubectl apply -f ./vs-code.yml'
     component: devtools
-- id: 
-  exec:
-    commandLine: '.repositories-update-contributing.sh IN_DOCKER'
-    component: devtools
 
 
