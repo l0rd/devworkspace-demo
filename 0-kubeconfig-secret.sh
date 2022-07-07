@@ -25,9 +25,9 @@ KUBE_CONFIG=$(echo -n "apiVersion: v1
     - name: ${KUBE_USER}
       user:
         token: ${KUBE_TOKEN}")
-KUBE_CONFIG_B64=$(echo "${KUBE_CONFIG}" | base64)
+KUBE_CONFIG_B64=$(echo "${KUBE_CONFIG}" | base64 -w 0)
 
-echo "kubectl apply -f - <<EOF
+kubectl apply -f - <<EOF
 kind: Secret
 apiVersion: v1
 metadata:
@@ -40,7 +40,6 @@ metadata:
     controller.devfile.io/watch-secret: "true"
 type: Opaque
 data:
-  config: |
-    ${KUBE_CONFIG_B64}
+  config: "${KUBE_CONFIG_B64}"
 EOF
-"
+
