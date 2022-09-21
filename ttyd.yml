@@ -12,6 +12,40 @@ spec:
     preStart:
       - init-container-command
   components:
+    - name: ttyd-runtime-description
+      attributes:
+        app.kubernetes.io/component: ttyd-runtime
+        app.kubernetes.io/part-of: ttyd.eclipse.org
+        controller.devfile.io/container-contribution: true
+      container:
+        image: noop/will/be/ignored
+        args: ['/tmp/ttyd', '-p', '3100', '/bin/bash']
+        memoryLimit: 128Mi
+        memoryRequest: 32Mi
+        cpuLimit: 500m
+        cpuRequest: 30m
+        volumeMounts:
+          - name: ttyd
+            path: /tmp/
+        endpoints:
+          - name: ttyd
+            attributes:
+              type: main
+              discoverable: false
+              urlRewriteSupported: true
+              contributed-by: che-ttyd.eclipse.org
+            targetPort: 3100
+            exposure: public
+            secure: false
+            protocol: https
+          - name: ttyd-redirect-1
+            attributes:
+              discoverable: false
+              urlRewriteSupported: false
+              contributed-by: che-ttyd.eclipse.org
+            targetPort: 13131
+            exposure: public
+            protocol: http
     - name: ttyd
       volume: {ephemeral: true}
     - name: ttyd-injector

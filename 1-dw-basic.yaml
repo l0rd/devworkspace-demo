@@ -25,43 +25,7 @@ spec:
           kubernetes:
             name: ttyd
       - name: frontend
+        attributes:
+          controller.devfile.io/merge-contribution: true
         container:
           image: quay.io/mloriedo/universal-developer-image:ubi8-dw-demo
-          args: ['/tmp/ttyd', '-p', '3100', '/bin/bash']
-          volumeMounts:
-            - name: ttyd
-              path: /tmp/
-          endpoints:
-            - name: ttyd
-              attributes:
-                type: main
-                discoverable: false
-                urlRewriteSupported: true
-                contributed-by: che-ttyd.eclipse.org
-              targetPort: 3100
-              exposure: public
-              secure: false
-              protocol: https
-            - name: ttyd-redirect-1
-              attributes:
-                discoverable: false
-                urlRewriteSupported: false
-                contributed-by: che-ttyd.eclipse.org
-              targetPort: 13131
-              exposure: public
-              protocol: http
-        attributes:
-          che-ttyd.eclipse.org/contribute-entry-point: true
-          che-ttyd.eclipse.org/contribute-volume-mount/checode: /checode
-          che-ttyd.eclipse.org/contribute-endpoint/che-code: 3100
-          che-ttyd.eclipse.org/contribute-endpoint/code-redirect-1: 13131
-          che-ttyd.eclipse.org/contribute-endpoint/code-redirect-2: 13132
-          che-ttyd.eclipse.org/contribute-endpoint/code-redirect-3: 13133
-          che-ttyd.eclipse.org/contribute-memoryLimit: true
-          che-ttyd.eclipse.org/original-memoryLimit: 1G
-          che-ttyd.eclipse.org/contribute-memoryRequest: true
-          che-ttyd.eclipse.org/contribute-cpuLimit: true
-          che-ttyd.eclipse.org/contribute-cpuRequest: true
-          che-ttyd.eclipse.org/contributed-container: frontend
-
-

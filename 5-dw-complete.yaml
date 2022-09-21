@@ -27,7 +27,7 @@ metadata:
   name: microservices-demo
 spec:
   started: true
-  routingClass: che
+  # routingClass: che
   template:
     attributes:
       controller.devfile.io/storage-type: ephemeral
@@ -42,14 +42,11 @@ spec:
           kubernetes:
             name: vs-code
       - name: frontend
+        attributes:
+          controller.devfile.io/merge-contribution: true
         container:
           image: quay.io/mloriedo/universal-developer-image:ubi8-dw-demo
-          args: ["/checode/entrypoint-volume.sh"]
-          env: [{name: CODE_HOST, value: "0.0.0.0"}]
-          volumeMounts:
-            - name: checode
-              path: /checode
-          memoryLimit: 2G
+          memoryLimit: 1G
           memoryRequest: 256Mi
           cpuLimit: 500m
           cpuRequest: 30m
@@ -58,38 +55,6 @@ spec:
               targetPort: 8079
             - name: nodejs
               targetPort: 3000
-            - name: che-code
-              attributes:
-                type: main
-                discoverable: false
-                urlRewriteSupported: true
-                contributed-by: che-code.eclipse.org
-              targetPort: 3100
-              exposure: public
-              path: '?tkn=eclipse-che'
-              secure: false
-              protocol: https
-            - name: code-redirect-1
-              attributes:
-                discoverable: false
-                urlRewriteSupported: false
-                contributed-by: che-code.eclipse.org
-              targetPort: 13131
-              exposure: public
-              protocol: http
-        attributes:
-          che-code.eclipse.org/contribute-entry-point: true
-          che-code.eclipse.org/contribute-volume-mount/checode: /checode
-          che-code.eclipse.org/contribute-endpoint/che-code: 3100
-          che-code.eclipse.org/contribute-endpoint/code-redirect-1: 13131
-          che-code.eclipse.org/contribute-endpoint/code-redirect-2: 13132
-          che-code.eclipse.org/contribute-endpoint/code-redirect-3: 13133
-          che-code.eclipse.org/contribute-memoryLimit: true
-          che-code.eclipse.org/original-memoryLimit: 1G
-          che-code.eclipse.org/contribute-memoryRequest: true
-          che-code.eclipse.org/contribute-cpuLimit: true
-          che-code.eclipse.org/contribute-cpuRequest: true
-          che-code.eclipse.org/contributed-container: frontend
       - name: catalogue
         container:
           image: weaveworksdemos/catalogue:0.3.5
@@ -101,7 +66,8 @@ spec:
             - sh
           args:
             - '-c'
-            - 'sleep 30 && /app -port 8080 -DSN "catalogue_user:default_password@tcp(localhost:3306)/socksdb"'
+            - 'tail -f /dev/null'
+            # - 'sleep 30 && /app -port 8080 -DSN "catalogue_user:default_password@tcp(localhost:3306)/socksdb"'
             # - 'sleep 30 && /app -port 8080 -DSN "catalogue_user:default_password@tcp(catalogue-db:3306)/socksdb"'
           # endpoints:
           #   - name: catalogue
@@ -208,4 +174,3 @@ spec:
       #     env:
       #       - name: reschedule
       #         value: on-node-failure
-  

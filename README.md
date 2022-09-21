@@ -5,7 +5,7 @@
 # Preparation
 
 ### Install the DevWorkspace Operator
-It can be installed as a standalone operator or it gets installed with the Web Terminal or OpenShift Dev Spaces. The following instructions have been tested on Red Hat Developer Sandbox where the DevWorkspace Operator v0.15 is currently installed.
+It can be installed as a standalone operator or it gets installed with the Web Terminal or OpenShift Dev Spaces. The following instructions have been tested with the DevWorkspace built from [this PR branch](https://github.com/devfile/devworkspace-operator/pull/844).
 
 ### Create a namespace and Deploy the editors definitions there
 
@@ -79,11 +79,11 @@ devworkspace.workspace.devfile.io/microservices-demo patched
 # STEP 4
 # Add more components in the devworkspace to test the
 # frontend comunicating with the underlying microservices.
-$ kubectl apply -f ./4-dw-microservices.yaml
+$ kubectl apply -f ./4-dw-microservices.yaml && kubectl get --watch -n dw-demo dw microservices-demo
 
 # STEP 5
 # Run the DW with VS Code.
-$ kubectl apply -f ./5-dw-complete.yaml
+$ kubectl apply -f ./5-dw-complete.yaml && kubectl get --watch -n dw-demo dw microservices-demo
 ```
 
 # Cleanup
