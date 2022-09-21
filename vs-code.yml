@@ -18,7 +18,7 @@ spec:
         app.kubernetes.io/part-of: che-code.eclipse.org
         controller.devfile.io/container-contribution: true
       container:
-        image: quay.io/mloriedo/universal-developer-image:ubi8-dw-demo
+        image: noop/will/be/ignored
         command:
           - /checode/entrypoint-volume.sh
         volumeMounts:

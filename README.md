@@ -5,7 +5,25 @@
 # Preparation
 
 ### Install the DevWorkspace Operator
-It can be installed as a standalone operator or it gets installed with the Web Terminal or OpenShift Dev Spaces. The following instructions have been tested with the DevWorkspace built from [this PR branch](https://github.com/devfile/devworkspace-operator/pull/844).
+It can be installed as a standalone operator or it gets installed with the Web Terminal or OpenShift Dev Spaces. The following instructions have been tested with the DevWorkspace built from [this PR branch](https://github.com/devfile/devworkspace-operator/pull/844):
+
+```bash
+kubectl apply -f - <<EOF
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: devworkspace-operator-catalog
+  namespace: openshift-marketplace
+spec:
+  sourceType: grpc
+  image: quay.io/amisevsk/devworkspace-operator-index:container-contributions
+  publisher: Red Hat
+  displayName: DevWorkspace Operator Catalog
+  updateStrategy:
+    registryPoll:
+      interval: 5m
+EOF
+```
 
 ### Create a namespace and Deploy the editors definitions there
 
