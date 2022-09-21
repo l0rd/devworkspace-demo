@@ -28,6 +28,11 @@ metadata:
 spec:
   started: true
   # routingClass: che
+  contributions:
+    - name: editor
+      plugin:
+        kubernetes:
+          name: vscode
   template:
     attributes:
       controller.devfile.io/storage-type: ephemeral
@@ -37,10 +42,6 @@ spec:
           remotes:
             origin: "https://github.com/l0rd/microservices-demo-frontend"
     components:
-      - name: editor
-        plugin:
-          kubernetes:
-            name: vs-code
       - name: frontend
         attributes:
           controller.devfile.io/merge-contribution: true

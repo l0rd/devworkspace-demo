@@ -11,6 +11,11 @@ spec:
   #     annotations:
   #       io.openshift.userns: "true"
   #       io.kubernetes.cri-o.userns-mode: "auto:size=65536;map-to-root=true"  # <-- user namespace
+  contributions:
+    - name: editor
+      plugin:
+        kubernetes:
+          name: ttyd
   template:
     attributes:
       controller.devfile.io/storage-type: ephemeral
@@ -20,10 +25,6 @@ spec:
           remotes:
             origin: "https://github.com/l0rd/microservices-demo-frontend"
     components:
-      - name: editor
-        plugin:
-          kubernetes:
-            name: ttyd
       - name: frontend
         attributes:
           controller.devfile.io/merge-contribution: true
