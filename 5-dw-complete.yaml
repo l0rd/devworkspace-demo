@@ -30,9 +30,8 @@ spec:
   # routingClass: che
   contributions:
     - name: editor
-      plugin:
-        kubernetes:
-          name: vscode
+      kubernetes:
+        name: vscode
   template:
     attributes:
       controller.devfile.io/storage-type: ephemeral

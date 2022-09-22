@@ -8,9 +8,8 @@ spec:
   # routingClass: che
   contributions:
     - name: editor
-      plugin:
-        kubernetes:
-          name: ttyd
+      kubernetes:
+        name: ttyd
   template:
     attributes:
       controller.devfile.io/storage-type: ephemeral

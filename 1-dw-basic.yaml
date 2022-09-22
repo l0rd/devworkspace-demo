@@ -13,9 +13,8 @@ spec:
   #       io.kubernetes.cri-o.userns-mode: "auto:size=65536;map-to-root=true"  # <-- user namespace
   contributions:
     - name: editor
-      plugin:
-        kubernetes:
-          name: ttyd
+      kubernetes:
+        name: ttyd
   template:
     attributes:
       controller.devfile.io/storage-type: ephemeral
