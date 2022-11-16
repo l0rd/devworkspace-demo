@@ -5,7 +5,7 @@
 # Preparation
 
 ### Install the DevWorkspace Operator
-It can be installed as a standalone operator or it gets installed with the Web Terminal or OpenShift Dev Spaces. The following instructions have been tested with the DevWorkspace built from [this PR branch](https://github.com/devfile/devworkspace-operator/pull/844):
+It can be installed as a standalone operator or it gets installed with the Web Terminal or OpenShift Dev Spaces. The following instructions have been tested with DevWorkspace Operator v0.17 installed on the dogfooding instance.
 
 ```bash
 kubectl apply -f - <<EOF

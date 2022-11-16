@@ -5,12 +5,6 @@ metadata:
   namespace: dw-demo
 spec:
   started: true
-  # Commenting out, waiting for https://github.com/devfile/devworkspace-operator/pull/868
-  # pods:
-  #   metadata:
-  #     annotations:
-  #       io.openshift.userns: "true"
-  #       io.kubernetes.cri-o.userns-mode: "auto:size=65536;map-to-root=true"  # <-- user namespace
   contributions:
     - name: editor
       kubernetes:
@@ -24,7 +18,7 @@ spec:
           remotes:
             origin: "https://github.com/l0rd/microservices-demo-frontend"
     components:
-      - name: frontend
+      - name: tooling-container
         attributes:
           controller.devfile.io/merge-contribution: true
         container:

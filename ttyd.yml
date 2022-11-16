@@ -4,14 +4,18 @@ metadata:
   name: ttyd
   namespace: dw-demo
 spec:
-  commands:
-    - id: init-container-command
-      apply:
-        component: ttyd-injector
-  events:
-    preStart:
-      - init-container-command
   components:
+    - name: ttyd-injector
+      container:
+        image: tsl0922/ttyd:latest
+        command: ['cp', '-r', '-n', '/usr/bin/ttyd', '/ttyd/']
+        volumeMounts:
+          - name: ttyd
+            path: /ttyd
+        memoryLimit: 128Mi
+        memoryRequest: 32Mi
+        cpuLimit: 500m
+        cpuRequest: 30m
     - name: ttyd-runtime-description
       attributes:
         app.kubernetes.io/component: ttyd-runtime
@@ -48,14 +52,10 @@ spec:
             protocol: http
     - name: ttyd
       volume: {ephemeral: true}
-    - name: ttyd-injector
-      container:
-        image: tsl0922/ttyd:latest
-        command: ['cp', '-r', '-n', '/usr/bin/ttyd', '/ttyd/']
-        volumeMounts:
-          - name: ttyd
-            path: /ttyd
-        memoryLimit: 128Mi
-        memoryRequest: 32Mi
-        cpuLimit: 500m
-        cpuRequest: 30m
+  events:
+    preStart:
+      - init-container-command
+  commands:
+    - id: init-container-command
+      apply:
+        component: ttyd-injector
