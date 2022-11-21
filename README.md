@@ -33,7 +33,7 @@ EOF
 # https://github.com/tsl0922/ttyd
 # and an editor based on nightly VS Code
 # https://github.com/che-incubator/che-code
-$ oc new-project dw-demo && kubectl apply -f ./ttyd.yml && kubectl apply -f ./vs-code.yml
+$ oc new-project dw-demo && kubectl apply -f ./ttyd.yml && kubectl apply -f ./vs-code.yml && kubectl apply -f ./theia.yml
 ```
 
 ### Create a secret with the kube context that we want to add in the workspaces (optional)
