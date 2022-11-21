@@ -25,6 +25,7 @@ spec:
         exposure: public
         secure: false
         protocol: https
+        path: /?backgroundColor=434343&wss
       - attributes:
           discoverable: false
           urlRewriteSupported: true
