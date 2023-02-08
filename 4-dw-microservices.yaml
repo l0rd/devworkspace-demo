@@ -20,8 +20,6 @@ spec:
             origin: "https://github.com/l0rd/microservices-demo-frontend"
     components:
       - name: frontend
-        attributes:
-          controller.devfile.io/merge-contribution: true
         container:
           image: quay.io/mloriedo/universal-developer-image:ubi8-dw-demo
       - name: catalogue

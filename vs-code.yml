@@ -24,8 +24,6 @@ spec:
         controller.devfile.io/container-contribution: true
       container:
         image: noop/will/be/ignored
-        command:
-          - /checode/entrypoint-volume.sh
         volumeMounts:
           - name: checode
             path: /checode
@@ -73,7 +71,13 @@ spec:
   events:
     preStart:
       - init-container-command
+    postStart:
+      - inject-and-start-vscode
   commands:
     - id: init-container-command
       apply:
         component: vscode-injector
+    - id: inject-and-start-vscode
+      exec:
+        component: vscode-runtime-description
+        commandLine: /checode/entrypoint-volume.sh

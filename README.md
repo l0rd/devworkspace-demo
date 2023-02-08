@@ -5,25 +5,7 @@
 # Preparation
 
 ### Install the DevWorkspace Operator
-It can be installed as a standalone operator or it gets installed with the Web Terminal or OpenShift Dev Spaces. The following instructions have been tested with DevWorkspace Operator v0.17 installed on the dogfooding instance.
-
-```bash
-kubectl apply -f - <<EOF
-apiVersion: operators.coreos.com/v1alpha1
-kind: CatalogSource
-metadata:
-  name: devworkspace-operator-catalog
-  namespace: openshift-marketplace
-spec:
-  sourceType: grpc
-  image: quay.io/amisevsk/devworkspace-operator-index:container-contributions
-  publisher: Red Hat
-  displayName: DevWorkspace Operator Catalog
-  updateStrategy:
-    registryPoll:
-      interval: 5m
-EOF
-```
+It can be installed as a standalone operator or it gets installed with the Web Terminal or OpenShift Dev Spaces. The following instructions have been tested with DevWorkspace Operator v0.19.
 
 ### Create a namespace and Deploy the editors definitions there
 
@@ -33,7 +15,10 @@ EOF
 # https://github.com/tsl0922/ttyd
 # and an editor based on nightly VS Code
 # https://github.com/che-incubator/che-code
-$ oc new-project dw-demo && kubectl apply -f ./ttyd.yml && kubectl apply -f ./vs-code.yml && kubectl apply -f ./theia.yml
+$ oc new-project dw-demo && \
+  kubectl apply -f ./ttyd.yml && \
+  kubectl apply -f ./vs-code.yml && \
+  kubectl apply -f ./intellij.yml
 ```
 
 ### Create a secret with the kube context that we want to add in the workspaces (optional)

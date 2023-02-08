@@ -23,7 +23,6 @@ spec:
         controller.devfile.io/container-contribution: true
       container:
         image: noop/will/be/ignored
-        args: ['/tmp/ttyd', '-p', '3100', '/bin/bash']
         memoryLimit: 128Mi
         memoryRequest: 32Mi
         cpuLimit: 500m
@@ -55,7 +54,13 @@ spec:
   events:
     preStart:
       - init-container-command
+    postStart:
+      - start-ttyd
   commands:
     - id: init-container-command
       apply:
         component: ttyd-injector
+    - id: start-ttyd
+      exec:
+        component: ttyd-runtime-description
+        commandLine: /tmp/ttyd -p 3100 /bin/bash
