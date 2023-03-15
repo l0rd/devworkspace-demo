@@ -2,7 +2,6 @@ apiVersion: workspace.devfile.io/v1alpha2
 kind: DevWorkspaceTemplate
 metadata:
   name: vscode
-  namespace: dw-demo
 spec:
   components:
     - name: vscode-injector
@@ -80,4 +79,4 @@ spec:
     - id: inject-and-start-vscode
       exec:
         component: vscode-runtime-description
-        commandLine: /checode/entrypoint-volume.sh
+        commandLine: 'nohup /checode/entrypoint-volume.sh > /checode/entrypoint-logs.txt 2>&1 &'

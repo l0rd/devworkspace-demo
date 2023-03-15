@@ -1,0 +1,26 @@
+kind: DevWorkspace
+apiVersion: workspace.devfile.io/v1alpha2
+metadata:
+  name: dw
+spec:
+  started: true
+  template:
+    attributes:
+      controller.devfile.io/storage-type: ephemeral
+    projects:
+      - name: quarkus-api
+        git:
+          remotes:
+            origin: https://github.com/l0rd/quarkus-api
+    components:
+      - name: dev-tooling
+        container:
+          image: quay.io/mloriedo/devtools:latest
+          memoryRequest: 2G
+          memoryLimit: 16G
+          cpuRequest: '1'
+          cpuLimit: '4'
+  contributions:
+    - name: editor
+      kubernetes:
+        name: vscode

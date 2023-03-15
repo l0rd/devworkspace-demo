@@ -2,7 +2,6 @@ apiVersion: workspace.devfile.io/v1alpha2
 kind: DevWorkspaceTemplate
 metadata:
   name: ttyd
-  namespace: dw-demo
 spec:
   components:
     - name: ttyd-injector
@@ -63,4 +62,4 @@ spec:
     - id: start-ttyd
       exec:
         component: ttyd-runtime-description
-        commandLine: /tmp/ttyd -p 3100 /bin/bash
+        commandLine: /tmp/ttyd -p 3100 vim ${PROJECT_SOURCE}

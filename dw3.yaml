@@ -1,0 +1,36 @@
+kind: DevWorkspace
+apiVersion: workspace.devfile.io/v1alpha2
+metadata:
+  name: dw
+spec:
+  started: true
+  template:
+    attributes:
+      controller.devfile.io/storage-type: ephemeral
+    projects:
+      - name: quarkus-api
+        git:
+          remotes:
+            origin: https://github.com/l0rd/quarkus-api
+    components:
+      - name: dev-tooling
+        container:
+          image: quay.io/mloriedo/devtools:latest
+          memoryRequest: 2G
+          memoryLimit: 16G
+          cpuRequest: '1'
+          cpuLimit: '4'
+    commands:
+      - id: 1-package
+        exec:
+          component: dev-tooling
+          commandLine: './mvnw clean package -DskipTests=true -Dquarkus.profile=staging'
+      - id: 2-runtests
+        exec:
+          component: dev-tooling
+          commandLine: './mvnw test'
+  contributions:
+    - name: editor
+      kubernetes:
+        name: vscode
+

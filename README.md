@@ -7,25 +7,35 @@
 ### Install the DevWorkspace Operator
 It can be installed as a standalone operator or it gets installed with the Web Terminal or OpenShift Dev Spaces. The following instructions have been tested with DevWorkspace Operator v0.19.
 
-### Create a namespace and Deploy the editors definitions there
+### Deploy the editors definitions
+
+The following commands create the DevWorkspacesTemplates that define the IDEs: vim, vscode and intellij.
 
 ```bash
-# Deploy the DevWorkspace Templates that 
-# define a basic editor based on ttyd
-# https://github.com/tsl0922/ttyd
-# and an editor based on nightly VS Code
-# https://github.com/che-incubator/che-code
-$ oc new-project dw-demo && \
-  kubectl apply -f ./ttyd.yml && \
-  kubectl apply -f ./vs-code.yml && \
-  kubectl apply -f ./intellij.yml
+$ kubectl apply -f ./editors-contributions/ttyd-contribution.yaml && \
+  kubectl apply -f ./editors-contributions/vs-code.yaml && \
+  kubectl apply -f ./editors-contributions/intellij.yaml
 ```
 
-### Create a secret with the kube context that we want to add in the workspaces (optional)
+### Iteratively create a cloud development environment
+
+1. Create a cloud dev environment with just the source code and the dev tools:
+`kubectl apply -f dw1.yaml`
+
+2. Add VS Code to the dev environment
+`kubectl apply -f dw2.yaml`
+
+3. Add commands that will e configured as VS Code tasks
+`kubectl apply -f dw3.yaml`
+
+4. Add a postgres container in the cloud development environment
+`kubectl apply -f dw4.yaml`
+
+### Automont user configuration and credentials using ConfigMaps and Secrets
+
+Automount a `~/.kubeconfig` file in the cloud development environment. The file is built from current Kubernetes context and includes a token. 
 
 ```bash
-# This is optional. If executed the demo 
-# can be run from the editors (inception mode ;-))
 $ ./0-kubeconfig-secret.sh
 ```
 
