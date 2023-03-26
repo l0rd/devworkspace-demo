@@ -4,34 +4,38 @@
 
 # Preparation
 
-### Install the DevWorkspace Operator
+## Install the DevWorkspace Operator
 It can be installed as a standalone operator or it gets installed with the Web Terminal or OpenShift Dev Spaces. The following instructions have been tested with DevWorkspace Operator v0.19.
 
-### Deploy the editors definitions
+## Deploy the editors definitions
 
 The following commands create the DevWorkspacesTemplates that define the IDEs: vim, vscode and intellij.
 
 ```bash
-$ kubectl apply -f ./editors-contributions/ttyd-contribution.yaml && \
-  kubectl apply -f ./editors-contributions/vs-code.yaml && \
-  kubectl apply -f ./editors-contributions/intellij.yaml
+$ kubectl apply -f ./editors-contributions/
 ```
 
-### Iteratively create a cloud development environment
+# Iteratively setup a cloud dev environment
 
-1. Create a cloud dev environment with just the source code and the dev tools:
-`kubectl apply -f dw1.yaml`
+## Containerized dev tools and source code 
 
-2. Add VS Code to the dev environment
-`kubectl apply -f dw2.yaml`
+`kubectl apply -f ./dw1.yaml`
 
-3. Add commands that will e configured as VS Code tasks
-`kubectl apply -f dw3.yaml`
+## Add the IDE: VS Code
 
-4. Add a postgres container in the cloud development environment
-`kubectl apply -f dw4.yaml`
+`kubectl apply -f ./dw2.yaml`
 
-### Automont user configuration and credentials using ConfigMaps and Secrets
+## Add pre-configured commands to build and test the application
+
+`kubectl apply -f ./dw3.yaml && ./scripts/dw-restart.sh `
+
+## Add a postgres container to run e2e tests
+
+`kubectl apply -f ./dw4.yaml`
+
+# Cloud dev environment configuration
+
+## `kubeconfig`
 
 Automount a `~/.kubeconfig` file in the cloud development environment. The file is built from current Kubernetes context and includes a token. 
 
@@ -39,15 +43,21 @@ Automount a `~/.kubeconfig` file in the cloud development environment. The file 
 $ ./0-kubeconfig-secret.sh
 ```
 
-### Build the container image with the devtools (optional)
+## `bashrc` and `PS1`
+
+## `gitconfig`
+
+## Persist `~/.m2`
+
+# Change the dev tools image
+
+## Build the container image with the devtools
 
 ```bash
-# This is optional.
 $ IMAGE="quay.io/mloriedo/universal-developer-image:ubi8-dw-demo"
 $ docker build -t "${IMAGE}" -f Dockerfile.dev .
 $ docker push "${IMAGE}"
 ```
-
 
 # Run the demo
 
