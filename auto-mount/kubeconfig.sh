@@ -8,23 +8,23 @@ KUBE_TOKEN=$(kubectl config view --raw -o json | jq -r '.users[0].user.token')
 KUBE_USER=$(oc whoami)
 KUBE_NS=$(oc project -q)
 KUBE_CONFIG=$(echo -n "apiVersion: v1
-    clusters:
-    - cluster:
-        certificate-authority: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-        server: https://kubernetes.default.svc
-      name: localcluster
-    contexts:
-    - context:
-        cluster: localcluster
-        namespace: ${KUBE_NS}
-        user: ${KUBE_USER}
-      name: logged-user
-    current-context: logged-user
-    kind: Config
-    users:
-    - name: ${KUBE_USER}
-      user:
-        token: ${KUBE_TOKEN}")
+clusters:
+- cluster:
+    certificate-authority: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    server: https://kubernetes.default.svc
+  name: localcluster
+contexts:
+- context:
+    cluster: localcluster
+    namespace: ${KUBE_NS}
+    user: ${KUBE_USER}
+  name: logged-user
+current-context: logged-user
+kind: Config
+users:
+- name: ${KUBE_USER}
+  user:
+    token: ${KUBE_TOKEN}")
 KUBE_CONFIG_B64=$(echo "${KUBE_CONFIG}" | base64 -w 0)
 
 kubectl apply -f - <<EOF

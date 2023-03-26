@@ -1,7 +1,7 @@
 apiVersion: workspace.devfile.io/v1alpha2
 kind: DevWorkspaceTemplate
 metadata:
-  name: ttyd
+  name: vim
 spec:
   components:
     - name: ttyd-injector
