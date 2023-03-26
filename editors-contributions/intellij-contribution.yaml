@@ -4,89 +4,95 @@ metadata:
   name: intellij
 spec:
   commands:
-  - apply:
-      component: idea-rhel8-injector
-    id: init-container-command
-  components:
-  - container:
-      command:
-      - /projector/entrypoint-volume.sh
-      cpuLimit: 2000m
-      cpuRequest: 1500m
-      endpoints:
-      - name: intellij
-        attributes:
-          cookiesAuthEnabled: true
-          discoverable: false
-          type: main
-          urlRewriteSupported: true
-        targetPort: 8887
-        exposure: public
-        secure: false
-        protocol: https
-        path: /?backgroundColor=434343&wss
-      - attributes:
-          discoverable: false
-          urlRewriteSupported: true
-        exposure: public
-        name: intellij-redirect-1
-        protocol: http
-        targetPort: 13131
-      - attributes:
-          discoverable: false
-          urlRewriteSupported: true
-        exposure: public
-        name: intellij-redirect-2
-        protocol: http
-        targetPort: 13132
-      - attributes:
-          discoverable: false
-          urlRewriteSupported: true
-        exposure: public
-        name: intellij-redirect-3
-        protocol: http
-        targetPort: 13133
-      env:
-      - name: PROJECTOR_ASSEMBLY_DIR
-        value: /projector
-      - name: PROJECTOR_CONFIG_DIR
-        value: /home/user/.jetbrains
-      image: registry.redhat.io/devspaces/udi-rhel8@sha256:df1961e226def97a83d403e46f7ddce9f0cdc6a97d7b894b33da718e34c5fcb3
-      memoryLimit: 6144Mi
-      memoryRequest: 2048Mi
-      sourceMapping: /projects
-      volumeMounts:
-      - name: projector-volume
-        path: /projector
-      - name: projector-configuration
-        path: /home/user/.jetbrains
-      - name: projector-java-configuration
-        path: /home/user/.java
-    name: idea-rhel8
-  - name: projector-volume
-    volume: {}
-  - name: projector-configuration
-    volume: {}
-  - name: projector-java-configuration
-    volume: {}
-  - container:
-      command:
-      - /projector/entrypoint-init-container.sh
-      cpuLimit: 1000m
-      cpuRequest: 30m
-      env:
-      - name: PROJECTOR_VOLUME_MOUNT
-        value: /projector-volume
-      - name: PROJECTOR_ASSEMBLY_DIR
-        value: /projector
-      image: registry.redhat.io/devspaces/idea-rhel8@sha256:ea2c269d7e8907a7cce68e554e0f6cede9f1f811b2dbfcea2b0ed67cd8709ca5
-      memoryLimit: 1028Mi
-      memoryRequest: 32Mi
-      sourceMapping: /projects
-      volumeMounts:
-      - name: projector-volume
-        path: /projector-volume
-    name: idea-rhel8-injector
+    - id: init-container-command
+      apply:
+        component: che-idea-injector
+    - id: init-che-idea-command
+      exec:
+        component: che-idea-runtime-description
+        commandLine: nohup /projector/entrypoint-volume.sh > /projector/entrypoint-logs.txt 2>&1 &
   events:
     preStart:
-    - init-container-command
+      - init-container-command
+    postStart:
+      - init-che-idea-command
+  components:
+    - name: che-idea-runtime-description
+      container:
+        image: quay.io/devfile/universal-developer-image@sha256:80fdd1ae37d3b9e0260d9c66b4ff12e35317c31243eabeea5212d98c537a3ba9
+        env:
+          - name: PROJECTOR_ASSEMBLY_DIR
+            value: /projector
+          - name: PROJECTOR_CONFIG_DIR
+            value: /home/user/.jetbrains
+        volumeMounts:
+          - name: projector-volume
+            path: /projector
+          - name: projector-configuration
+            path: /home/user/.jetbrains
+          - name: projector-java-configuration
+            path: /home/user/.java
+        memoryLimit: 6144Mi
+        memoryRequest: 2048Mi
+        cpuLimit: 2000m
+        cpuRequest: 1500m
+        endpoints:
+          - name: intellij
+            attributes:
+              type: main
+              cookiesAuthEnabled: true
+              discoverable: false
+              urlRewriteSupported: true
+              secure: false
+            targetPort: 8887
+            exposure: public
+            path: /?backgroundColor=434343&wss
+            protocol: http
+          - name: intellij-redirect-1
+            attributes:
+              discoverable: false
+              urlRewriteSupported: false
+            targetPort: 13131
+            exposure: public
+            protocol: http
+          - name: intellij-redirect-2
+            attributes:
+              discoverable: false
+              urlRewriteSupported: false
+            targetPort: 13132
+            exposure: public
+            protocol: http
+          - name: intellij-redirect-3
+            attributes:
+              discoverable: false
+              urlRewriteSupported: false
+            targetPort: 13133
+            exposure: public
+            protocol: http
+      attributes:
+        app.kubernetes.io/component: che-idea-runtime
+        app.kubernetes.io/part-of: che-idea.eclipse.org
+        controller.devfile.io/container-contribution: true
+    - name: projector-volume
+      volume: {}
+    - name: projector-configuration
+      volume: {}
+    - name: projector-java-configuration
+      volume: {}
+    - name: che-idea-injector
+      container:
+        image: quay.io/che-incubator/che-idea:next
+        command:
+          - /projector/entrypoint-init-container.sh
+        env:
+          - name: PROJECTOR_VOLUME_MOUNT
+            value: /projector-volume
+          - name: PROJECTOR_ASSEMBLY_DIR
+            value: /projector
+        volumeMounts:
+          - name: projector-volume
+            path: /projector-volume
+        memoryLimit: 128Mi
+        memoryRequest: 32Mi
+        cpuLimit: 500m
+        cpuRequest: 30m
