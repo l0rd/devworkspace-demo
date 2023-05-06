@@ -8,6 +8,7 @@ KUBE_TOKEN=$(kubectl config view --raw -o json | jq -r '.users[0].user.token')
 KUBE_USER=$(oc whoami)
 KUBE_NS=$(oc project -q)
 KUBE_CONFIG=$(echo -n "apiVersion: v1
+kind: Config
 clusters:
 - cluster:
     certificate-authority: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
@@ -20,7 +21,6 @@ contexts:
     user: ${KUBE_USER}
   name: logged-user
 current-context: logged-user
-kind: Config
 users:
 - name: ${KUBE_USER}
   user:
@@ -42,4 +42,3 @@ type: Opaque
 data:
   config: "${KUBE_CONFIG_B64}"
 EOF
-
