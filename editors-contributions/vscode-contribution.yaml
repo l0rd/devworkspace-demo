@@ -34,7 +34,7 @@ spec:
           - name: CODE_HOST
             value: '0.0.0.0'
         endpoints:
-          - name: che-code
+          - name: editor
             attributes:
               type: main
               cookiesAuthEnabled: true

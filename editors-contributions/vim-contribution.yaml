@@ -30,7 +30,7 @@ spec:
           - name: ttyd
             path: /tmp/
         endpoints:
-          - name: ttyd
+          - name: editor
             attributes:
               type: main
               discoverable: false
@@ -62,4 +62,4 @@ spec:
     - id: start-ttyd
       exec:
         component: ttyd-runtime-description
-        commandLine: /tmp/ttyd -p 3100 vim ${PROJECT_SOURCE}
+        commandLine: 'nohup /tmp/ttyd -p 3100 vim ${PROJECT_SOURCE} > /tmp/ttyd-logs.txt 2>&1 &'

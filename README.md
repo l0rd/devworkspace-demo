@@ -40,7 +40,11 @@ And now vim...
 ```bash
 kubectl patch dw dw \
      --type merge \
-     -p '{ "spec": { "contributions": [ {"name": "editor", "kubernetes": { "name": "vim" } } ] } }'
+     -p '{ "spec": { "contributions": [ {"name": "editor", "kubernetes": { "name": "vim" } } ] } }' && \
+  sleep 2 && \
+  kubectl wait --for=condition=Ready dw/dw --timeout=300s && \
+  export IDE=`kubectl get dw dw -o jsonpath={.status.mainUrl}` && \
+  printf "\nOpen VIM in your browser with the following link:\n\n\t${IDE}\n\n"
 ```
 
 And intelliJ...
@@ -48,7 +52,11 @@ And intelliJ...
 ```bash
 kubectl patch dw dw \
      --type merge \
-     -p '{ "spec": { "contributions": [ {"name": "editor", "kubernetes": { "name": "intellij" } } ] } }'
+     -p '{ "spec": { "contributions": [ {"name": "editor", "kubernetes": { "name": "intellij" } } ] } }' && \
+  sleep 2 && \
+  kubectl wait --for=condition=Ready dw/dw --timeout=300s && \
+  export IDE=`kubectl get dw dw -o jsonpath={.status.mainUrl}` && \
+  printf "\nOpen IntelliJ in your browser with the following link:\n\n\t${IDE}\n\n" 
 ```
 
 ## Add pre-configured commands to build and test the application

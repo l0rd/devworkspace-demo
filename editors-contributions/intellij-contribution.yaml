@@ -37,7 +37,7 @@ spec:
         cpuLimit: 2000m
         cpuRequest: 1500m
         endpoints:
-          - name: intellij
+          - name: editor
             attributes:
               type: main
               cookiesAuthEnabled: true
