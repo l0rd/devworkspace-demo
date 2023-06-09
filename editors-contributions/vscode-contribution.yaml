@@ -30,6 +30,9 @@ spec:
         memoryRequest: 256Mi
         cpuLimit: 500m
         cpuRequest: 30m
+        env:
+          - name: CODE_HOST
+            value: '0.0.0.0'
         endpoints:
           - name: che-code
             attributes:

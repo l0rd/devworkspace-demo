@@ -19,11 +19,37 @@ $ kubectl apply -f ./editors-contributions/
 
 ## Containerized dev tools and source code 
 
-`kubectl apply -f ./dw1.yaml`
+```bash
+kubectl apply -f ./dw1.yaml && \
+  kubectl wait --for=condition=Ready dw/dw --timeout=300s && \
+  export POD=`kubectl get pod -l "controller.devfile.io/devworkspace_name=dw" -o jsonpath={.items[].metadata.name}`
+  printf "\nBuild in the remote dev environment:\n\n\tkubectl exec -ti ${POD} -- bash -c \'cd \${PROJECT_SOURCE} && mvn clean install\'\n\n"
+```
 
 ## Add the IDE: VS Code
 
-`kubectl apply -f ./dw2.yaml`
+```bash
+kubectl apply -f ./dw2.yaml && \
+  kubectl wait --for=condition=Ready dw/dw --timeout=300s && \
+  export IDE=`kubectl get dw dw -o jsonpath={.status.mainUrl}` && \
+  printf "\nOpen VS Code in your browser with the following link:\n\n\t${IDE}\n\n"
+```
+
+And now vim...
+
+```bash
+kubectl patch dw dw \
+     --type merge \
+     -p '{ "spec": { "contributions": [ {"name": "editor", "kubernetes": { "name": "vim" } } ] } }'
+```
+
+And intelliJ...
+
+```bash
+kubectl patch dw dw \
+     --type merge \
+     -p '{ "spec": { "contributions": [ {"name": "editor", "kubernetes": { "name": "intellij" } } ] } }'
+```
 
 ## Add pre-configured commands to build and test the application
 
