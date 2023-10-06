@@ -10,5 +10,5 @@ components:
 commands:
   - id: 0-prep01-deploy-editors
     exec:
-      commandLine: 'kubectl apply -f ./ttyd.yml && kubectl apply -f ./vs-code.yml'
+      commandLine: 'kubectl apply -f ./editors-contributions/'
       component: devtools
