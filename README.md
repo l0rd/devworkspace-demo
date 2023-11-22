@@ -258,9 +258,8 @@ docker push "${IMAGE}"
 # How to cleanup all the resources created by this demo
 
 ```bash
-NAMESPACE=dw-demo
 kubectl delete dw dw
 kubectl delete cm git-config dotfiles-config
 kubectl delete secret git-credentials kube-config
-kubectl delete dwt vs-code vscode-ds intellij vim
+kubectl delete dwt vscode vscode-ds intellij vim
 ```
