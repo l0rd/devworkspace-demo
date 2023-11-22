@@ -35,7 +35,7 @@ kubectl apply -f ./editors-contributions/
 
 # Iteratively setup a cloud dev environment
 
-## dw1.yaml: Containerized dev tools and source code with no IDE
+## `dw1.yaml` Containerized dev tools and source code with no IDE
 
 Create a cloud development environment using `dw1.yaml` that specify a git repo and a container with the devtools but no IDE:
 
@@ -79,7 +79,7 @@ kubectl exec -ti ${POD} -- bash -c 'cd ${PROJECT_SOURCE} && mvn clean install'
 
 :warning: Last command fails with `exit code 137`: the build process has been killed with an OOM error (Out Of Memory). We are going to fix it in next step
 
-## dw2.yaml: Add the IDE plus more memory and more CPU
+## `dw2.yaml` Add the IDE plus more memory and more CPU
 
 We are going to use a slightly different DevWorkspace object:
 ```diff
@@ -133,7 +133,7 @@ kubectl patch dw dw \
   printf "\nOpen IntelliJ in your browser with the following link:\n\n\t${IDE}\n\n" 
 ```
 
-## dw3.yaml: Preconfigured commands to build and test the application
+## `dw3.yaml` Preconfigured commands to build and test the application
 
 Next DevWorkspace object specifies some commands `1-package` and `2-runtests`:
 
@@ -173,7 +173,7 @@ Now it's possible to run the predefined commands as VS Code tasks (Terminal -> R
 
 :warning: Command '2-runtests' fails with the error "org.postgresql.util.PSQLException: Connection to localhost:5432 refused.". We are going to fix it in next step.
 
-## dw4.yaml: Add a PostgreSQL container to pass tests
+## `dw4.yaml` Add a PostgreSQL container to pass tests
 
 Next DevWorkspace object specifies a new component of type container named `postgresql`:
 
