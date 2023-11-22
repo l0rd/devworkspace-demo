@@ -17,7 +17,7 @@ spec:
         container:
           image: quay.io/mloriedo/devtools:latest
           memoryRequest: 2G
-          memoryLimit: 16G
+          memoryLimit: 10G
           cpuRequest: '1'
           cpuLimit: '4'
       - name: postgresql
