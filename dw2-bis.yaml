@@ -1,0 +1,40 @@
+kind: DevWorkspace
+apiVersion: workspace.devfile.io/v1alpha2
+metadata:
+  name: dw
+spec:
+  started: true
+  template:
+    attributes:
+      controller.devfile.io/storage-type: ephemeral
+      pod-overrides:
+        spec:
+          shareProcessNamespace: true
+    projects:
+      - name: outyet
+        git:
+          remotes:
+            origin: https://github.com/l0rd/outyet.git
+    components:
+      - name: dev-tooling
+        container:
+          image: ghcr.io/l0rd/outyet-dev:latest
+          memoryRequest: 2G
+          memoryLimit: 10G
+          cpuRequest: '1'
+          cpuLimit: '4'
+      - name: outyet
+        container:
+          image: ghcr.io/l0rd/outyet:latest
+          memoryLimit: 128Mi
+          cpuLimit: 500m
+          endpoints:
+            - name: outyet
+              targetPort: 8080
+              exposure: public
+              path: /
+              protocol: http
+  contributions:
+    - name: editor
+      kubernetes:
+        name: vscode

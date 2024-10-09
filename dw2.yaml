@@ -8,14 +8,14 @@ spec:
     attributes:
       controller.devfile.io/storage-type: ephemeral
     projects:
-      - name: quarkus-api
+      - name: outyet
         git:
           remotes:
-            origin: https://github.com/l0rd/quarkus-api
+            origin: https://github.com/l0rd/outyet.git
     components:
       - name: dev-tooling
         container:
-          image: quay.io/mloriedo/devtools:latest
+          image: ghcr.io/l0rd/outyet-dev:latest
           memoryRequest: 2G
           memoryLimit: 10G
           cpuRequest: '1'
